@@ -90,37 +90,29 @@ FEATURES = [
 ]
 
 BRIEFS = [
-    ("MIDDLE EAST", "Iran war has cost US $48bn+ since Feb, Pentagon says"),
-    ("AMERICAS", "Netanyahu pressed Trump for a second Iran operation"),
-    ("MIDDLE EAST", "Trump: Iran wants a deal — “see what happens after Jan 1”"),
+    ("MIDDLE EAST", "Iran war cost US $48bn+ since Feb, Pentagon says"),
+    ("AMERICAS", "Netanyahu pressed Trump for a new Iran strike"),
+    ("MIDDLE EAST", "Trump: Iran wants a deal — wait till after Jan 1"),
     ("EUROPE", "Putin: US “insistently” asks Europe into peace talks"),
-    ("EUROPE", "Zelenskyy: pressure needed — Europe ready with sanctions"),
-    ("EUROPE", "Macron: Ukraine's NATO accession should be reconsidered"),
-    ("EUROPE", "Allies review Koalicja, first multinational-force drill"),
-    ("ASIA", "Akvan: Majhi holds midnight meet; temple shut till 21 Nov"),
+    ("EUROPE", "Zelenskyy: pressure needed, Europe ready to act"),
+    ("EUROPE", "Macron: rethink Ukraine's NATO accession"),
+    ("ASIA", "Akvan: midnight meet; temple shut till 21 Nov"),
     ("ASIA", "Akvan: 2,523 relief camps; surge of 0.5–1 m warned"),
     ("WORLD", "COP31: 83 developing nations filed adaptation plans"),
-    ("WORLD", "COP31: 17 countries back Antalya carbon-markets deal"),
+    ("WORLD", "COP31: 17 nations back Antalya carbon-markets deal"),
     ("WORLD", "COP31: AI pledge fails to draw major US tech firms"),
-    ("WORLD", "S&P 500 −2.02%, Nasdaq −2.25%, Dow 49,097 −2.19%"),
+    ("WORLD", "S&P −2.02%, Nasdaq −2.25%, Dow 49,097 −2.19%"),
     ("WORLD", "Gold $3,652 −2.39%, a 14-month low; silver $45.30"),
-    ("WORLD", "Brent $92.74 +0.86%; WTI $83.16; IEA sees Q4 surplus"),
-    ("WORLD", "Dollar index 103.94, near 19-month high; yield over 5%"),
+    ("WORLD", "Brent $92.74 +0.86%; WTI $83.16; IEA sees surplus"),
+    ("WORLD", "Dollar 103.94, near 19-month high; yield over 5%"),
     ("WORLD", "Bitcoin $63,384 −2%; ether $1,802 as crypto slides"),
     ("ASIA", "ASX futures −1.05%; Nikkei +0.71%, Kospi +1.39%"),
-    ("AMERICAS", "Anthropic's record $81.3bn offering closes today"),
     ("AMERICAS", "Essayli to lead stalled Trump documents-case probe"),
     ("ASIA", "India signs ₹1,976-cr Barak missile upgrade deal"),
     ("ASIA", "Goldman Sachs lifts India to Overweight; Nifty 28,500"),
-    ("ASIA", "New PUC certificate renewal rules announced in India"),
-    ("ASIA", "Women's Asian Hockey Champions Trophy begins today"),
-    ("ASIA", "India v NZ, Day 2 today: NZ resume 243-5, Nicholls 113*"),
-    ("WORLD", "Snooker: Advani, Ramachandran win opening matches"),
-    ("WORLD", "57th IFFI adds animation section with five world films"),
-    ("WORLD", "World Children's Day marked around the globe today"),
-    ("ASIA", "APEC leaders in Shenzhen talk trade, tech, open markets"),
+    ("ASIA", "APEC leaders in Shenzhen talk trade and tech"),
     ("ASIA", "Xi urges Asia-Pacific economies to back open trade"),
-    ("ASIA", "Japan PM Takaichi seeks continued dialogue with China"),
+    ("ASIA", "Japan PM Takaichi seeks dialogue with China"),
     ("ASIA", "Pakistan minister to lead delegation to Delhi for SCO"),
 ]
 
@@ -386,11 +378,24 @@ CONTINENTS = [
      (135, -12), (132, -12), (126, -14), (122, -17)],
     [(95, 5), (100, 0), (104, -2), (110, -7), (114, -8), (119, -5), (122, 0),
      (120, 10), (115, 5), (105, 2), (100, 8)],
+    # Britain, Japan, New Zealand (small but recognisable at this scale)
+    [(-5, 50), (-3, 53), (-5, 56), (-2, 58), (0, 57), (1, 51), (-3, 50)],
+    [(130, 31), (132, 33), (135, 34), (137, 35), (139, 37), (140, 39),
+     (141, 41), (141, 44), (143, 42), (140, 38), (136, 35), (132, 32)],
+    [(167, -45), (170, -42), (174, -39), (177, -38), (175, -41), (172, -43),
+     (168, -46)],
 ]
-# feature number -> (lon, lat) pin; 7 (Voyager) is in space, drawn in the corner
-PINS = {1: (51, 35), 2: (13.5, 53.5), 3: (85, 19), 4: (30, 37), 5: (-68, 43),
-        6: (-79, 37), 8: (19, 47), 9: (-105, 50), 10: (3, 50), 11: (-48, -16),
-        12: (-58, 7), 13: (9, 43.5)}
+# feature number -> (lon, lat) pin; 7 (Voyager) is in space, drawn in the corner.
+# PIN_DX: badge offset in px from the true spot (leader line) where pins
+# would otherwise overlap — central Europe (2, 8, 10, 13) and the US east
+# coast (5, 6). A small dot marks the true spot; the numbered badge sits
+# at the end of the leader line.
+PINS = {1: (51, 35), 2: (13.4, 52.5), 3: (85, 19), 4: (30.7, 36.9),
+        5: (-74, 41), 6: (-77, 39), 8: (16.4, 48.2), 9: (-105, 50),
+        10: (8.7, 50.1), 11: (-47.9, -15.8), 12: (-58.9, 4.9),
+        13: (8.5, 47.4)}
+PIN_DX = {2: (25, -17), 8: (52, -14), 10: (3, -19), 13: (-30, -17),
+          4: (16, 28), 5: (24, -14), 6: (-26, 14)}
 
 
 def draw_map(d, x, y, w, h):
@@ -401,12 +406,39 @@ def draw_map(d, x, y, w, h):
         return (x + 4 + (lon + 170) / 360.0 * (w - 8),
                 y + 4 + (78 - lat) / 136.0 * (h - 8))
 
+    # graticule, every 30 degrees
+    for lon in range(-150, 181, 30):
+        gx, _ = px(lon, 0)
+        d.line([gx, y + 1, gx, y + h - 1], fill=(175, 198, 212), width=1)
+    for lat in (-60, -30, 0, 30, 60):
+        _, gy = px(0, lat)
+        d.line([x + 1, gy, x + w - 1, gy], fill=(175, 198, 212), width=1)
     for poly in CONTINENTS:
         d.polygon([px(lon, lat) for lon, lat in poly], fill=(222, 196, 142),
                   outline=(160, 130, 90))
+    # ocean + continent labels (small caps, out of the pins' way)
+    lab_ocean = SANS_B(10)
+    for (lon, lat), text in [((-150, 0), "PACIFIC"), ((-30, 10), "ATLANTIC"),
+                             ((80, -25), "INDIAN OCEAN")]:
+        lx, ly = px(lon, lat)
+        d.text((lx - lab_ocean.getlength(text) / 2, ly - 5), text,
+               font=lab_ocean, fill=(96, 124, 148))
+    lab_land = SANS_B(10)
+    for (lon, lat), text in [((-140, 65), "NORTH AMERICA"), ((20, 5), "AFRICA"),
+                             ((90, 45), "ASIA"), ((134, -25), "AUSTRALIA"),
+                             ((-75, -20), "S. AMERICA")]:
+        lx, ly = px(lon, lat)
+        d.text((lx - lab_land.getlength(text) / 2, ly - 5), text,
+               font=lab_land, fill=(148, 122, 82))
     fnum = SANS_B(11)
     for n, (lon, lat) in PINS.items():
         cx, cy = px(lon, lat)
+        dx, dy = PIN_DX.get(n, (0, 0))
+        if dx or dy:
+            bx, by = cx + dx, cy + dy
+            d.line([cx, cy, bx, by], fill=RED, width=1)
+            d.ellipse([cx - 3, cy - 3, cx + 3, cy + 3], fill=RED)
+            cx, cy = bx, by
         d.ellipse([cx - 8, cy - 8, cx + 8, cy + 8], fill=RED, outline=LIGHT, width=1)
         tw = fnum.getlength(str(n))
         d.text((cx - tw / 2, cy - 6), str(n), font=fnum, fill=LIGHT)
@@ -469,11 +501,11 @@ def build():
         counts[r] += 1
     for r, _ in BRIEFS:
         counts[r] += 1
-    assert sum(counts.values()) == 45, counts
+    assert sum(counts.values()) == 37, counts
     y = 92
     x = 16
-    d.text((x, y + 7), "45 STORIES ·", font=SANS_B(15), fill=INK)
-    x += SANS_B(15).getlength("45 STORIES · ") + 6
+    d.text((x, y + 7), "37 STORIES ·", font=SANS_B(15), fill=INK)
+    x += SANS_B(15).getlength("37 STORIES · ") + 6
     for r in REGION_ORDER:
         label = f"{r} {counts[r]}"
         fw = SANS_B(14).getlength(label) + 18
@@ -521,17 +553,17 @@ def build():
     y = 616
 
     # --- map ---
-    draw_map(d, 16, y, W - 32, 96)
-    y = 720
+    draw_map(d, 16, y, W - 32, 118)
+    y = 734
 
     # --- briefs header ---
     d.text((16, y), "THE DAY IN BRIEF", font=SANS_B(14), fill=INK)
     d.line([16, y + 20, W - 16, y + 20], fill=INK, width=1)
     y += 26
 
-    # --- briefs: 3 columns ---
+    # --- briefs: 3 columns, 8 rows each ---
     cols = [BRIEFS[i::3] for i in range(3)]
-    bf = SANS(11)
+    bf = SANS(13)
     cw = (W - 32 - 2 * 16) // 3
     max_lines = max(len(c) for c in cols)
     for ci, col in enumerate(cols):
@@ -541,9 +573,9 @@ def build():
             line = "• " + text
             assert bf.getlength(line) <= cw, f"BRIEF TOO LONG: {line!r}"
             d.text((cx, by), "•", font=bf, fill=REGION_COLOR[region])
-            d.text((cx + 12, by), text, font=bf, fill=INK)
-            by += 16
-    y += max_lines * 16 + 4
+            d.text((cx + 13, by), text, font=bf, fill=INK)
+            by += 20
+    y += max_lines * 20 + 4
 
     # --- date check box ---
     d.rectangle([16, y, W - 16, y + 34], outline=RED, width=2)
@@ -560,7 +592,7 @@ def build():
     # --- footer ---
     d.rectangle([0, y, W, H], fill=NAVY)
     d.text((16, y + 6),
-           "45 STORIES · FIVE REGIONS · ONE PAGE — Every story verified from reports of Friday 20 November 2026",
+           "37 STORIES · FIVE REGIONS · ONE PAGE — Every story verified from reports of Friday 20 November 2026",
            font=SANS_B(12), fill=LIGHT)
     d.text((16, y + 22), "Sources: Reuters · BBC · AP · IMD · UN News · make.fun news-image-20261120",
            font=SANS(11), fill=(180, 195, 215))
